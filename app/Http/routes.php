@@ -13,8 +13,30 @@
 
 // Route::get('/', 'WelcomeController@index');
 Route::get('home', 'HomeController@index');
-
 Route::get('/', 'HomeController@index');
+
+//SfusiAdd
+Route::get('add', 'SfusiAddController@index');
+Route::post('searchinteos', 'SfusiAddController@searchinteos');
+Route::post('checkqty', 'SfusiAddController@checkqty');
+Route::post('add_new_box', 'SfusiAddController@add_new_box');
+Route::get('move', 'SfusiAddController@move');
+Route::post('move_box', 'SfusiAddController@move_box');
+Route::post('move_to_location/{id}', 'SfusiAddController@move_to_location');
+
+//Sfusi Table
+Route::get('table', 'SfusiTableController@index');
+Route::get('table/edit/{id}', 'SfusiTableController@edit');
+Route::post('table/edit_update/{id}', 'SfusiTableController@edit_update');
+Route::get('table/remove/{id}', 'SfusiTableController@remove');
+
+//SfusiSearch
+Route::get('search', 'SfusiSearchController@index');
+
+//SfusiRemove
+Route::get('remove', 'SfusiRemoveController@index');
+
+
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

@@ -18,6 +18,7 @@ class CreateSfusiStocksTable extends Migration {
 
 			$table->string('cartonbox');
 			$table->string('po', 24);
+			$table->string('po_status', 24);
 			$table->string('style', 12);
 			$table->string('color', 12);
 			$table->string('size', 8);
@@ -26,6 +27,8 @@ class CreateSfusiStocksTable extends Migration {
 			$table->integer('standard_qty');
 			
 			$table->string('location', 32)->nullable();
+
+			$table->string('coment', 64)->nullable();
 
 			$table->string('status', 32)->nullable();
 			$table->string('coloumn', 32)->nullable();
