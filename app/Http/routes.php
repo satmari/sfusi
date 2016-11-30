@@ -33,8 +33,18 @@ Route::get('table/remove/{id}', 'SfusiTableController@remove');
 //SfusiSearch
 Route::get('search', 'SfusiSearchController@index');
 
+// Refresh 
+Route::get('refresh', 'SfusiTableController@refresh');
+
+
 //SfusiRemove
-Route::get('remove', 'SfusiRemoveController@index');
+// Route::get('remove', 'SfusiRemoveController@index');
+
+Route::get('removecb', 'SfusiRemoveController@index');
+Route::get('removecb/destroy', 'SfusiRemoveController@destroy');
+Route::post('removecb/destroy', 'SfusiRemoveController@destroy');
+Route::get('removecb/destroycb', 'SfusiRemoveController@destroycb');
+Route::post('removecb/destroycb', 'SfusiRemoveController@destroycb');
 
 
 

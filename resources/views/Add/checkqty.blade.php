@@ -5,7 +5,7 @@
 	<div class="row vertical-center-row">
 		<div class="text-center col-md-4 col-md-offset-4">
 			<div class="panel panel-default">
-				<div class="panel-heading"><b>Add Quantity of garments and location</b></div>
+				<div class="panel-heading"><b>Add Quantity of garments</b></div>
 				
 				{!! Form::open(['url' => 'checkqty']) !!}
 				<input type="hidden" name="_token" id="_token" value="<?php echo csrf_token(); ?>">
@@ -15,6 +15,7 @@
 				{!!Form::hidden('po_status', $po_status) !!}
 				{!!Form::hidden('style', $style) !!}
 				{!!Form::hidden('color', $color) !!}
+				{!!Form::hidden('colordesc', $colordesc) !!}
 				{!!Form::hidden('size', $size) !!}
 				{!!Form::hidden('standard_qty', $standard_qty) !!}
 				

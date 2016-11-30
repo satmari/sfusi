@@ -11,7 +11,7 @@
 				
 				<div class="panel-body">
 					<div class="">
-							<a href="{{url('/add')}}" class="btn btn-default center-block">Continue</a>
+							<a href="{{url('/')}}" class="btn btn-default center-block">Continue</a>
 					</div>
 				</div>
 			</div>

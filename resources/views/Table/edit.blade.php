@@ -14,11 +14,13 @@
 						<span>Qty: </span>
 						{!! Form::input('number', 'qty', $box->qty, ['class' => 'form-control']) !!}
 					</div>
-
+					
+					{{-- 
 					<div class="panel-body">
 						<span>Location: </span>
 						{!! Form::input('text', 'location', $box->location, ['class' => 'form-control']) !!}
 					</div>
+					--}}
 
 					<div class="panel-body">
 						<span>Comment: </span>

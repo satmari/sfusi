@@ -40,19 +40,24 @@
                 -->
 				    <thead>
 				        <tr>
-				           <th>id</th>
+				           {{-- <th>id</th> --}}
 				           <th>Cartonbox</th>
-				           <th>Po</th>
-				           <th>Po status</th>
+				           <th><b>Po</b></th>
+				           {{-- <th>Po status</th> --}}
 				           <th>Style</th>
 				           <th>Color</th>
+				           <th>ColorDesc</th>
 				           <th>Size</th>
 				           <th style="background-color: aliceblue;">Qty</th>
 				           <th style="background-color: beige;">Location</th>
 				           <th>Standard Qty</th>
 				           <th style="background-color: antiquewhite;">Comment</th>
-				           <!-- <th>Created at</th> -->
-				           <!-- <th>Edited at</th> -->
+				           <th>Last from module</th>
+				           <th>Status</th>
+				           <th>Flash</th>
+				           <th>Flag</th>
+				           {{-- <th>Created at</th> --}}
+				           {{-- <th>Edited at</th> --}}
 
 				           <th></th>
 				           <th></th>
@@ -63,17 +68,22 @@
 				    @foreach ($data as $d)
 
 				        <tr>
-				        	<td>{{ $d->id }}</td>
+				        	{{-- <td>{{ $d->id }}</td> --}}
 				        	<td>{{ $d->cartonbox }}</td>
-				        	<td>{{ $d->po }}</td>
-				        	<td>{{ $d->po_status }}</td>
+				        	<td><b>{{ substr($d->po, 9, 5) }}</b></td>
+				        	{{-- <td>{{ $d->po_status }}</td> --}}
 				        	<td>{{ $d->style }}</td>
 				        	<td>{{ $d->color }}</td>
+				        	<td>{{ $d->colordesc }}</td>
 				        	<td>{{ $d->size }}</td>
 				        	<td style="background-color: aliceblue;">{{ $d->qty }}</td>
 				        	<td style="background-color: beige;">{{ $d->location }}</td>
 				        	<td>{{ $d->standard_qty }}</td>
 				        	<td style="background-color: antiquewhite;">{{ $d->coment }}</td>
+				        	<td>{{ substr($d->lastused, 0, 19) }}</td>
+				        	<td>{{ $d->status }}</td>
+				        	<td>{{ $d->flash }}</td>
+				        	<td>{{ $d->flag }}</td>
 				        	{{-- <td>{{ substr($d->created_at, 0, 19) }}</td> --}}
 				        	{{-- <td>{{ substr($d->updated_at, 0, 19) }}</td> --}}
 

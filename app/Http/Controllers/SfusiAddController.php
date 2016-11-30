@@ -44,7 +44,8 @@ class SfusiAddController extends Controller {
 				po.BoxQuant,
 				po.POClosed,
 				st.StyCod,
-				sku.Variant
+				sku.Variant,
+				sku.ClrDesc
 
 				FROM            dbo.CNF_CartonBox AS cb 
 				LEFT OUTER JOIN dbo.CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
@@ -60,7 +61,8 @@ class SfusiAddController extends Controller {
 								po.BoxQuant,
 								po.POClosed,
 								st.StyCod,
-								sku.Variant"
+								sku.Variant,
+								sku.ClrDesc"
 				), array(
 					'somevariable' => $inteoscbcode
 			));
@@ -94,6 +96,7 @@ class SfusiAddController extends Controller {
 	    	
 	    	$style = $inteos_array[0]['StyCod'];
 	    	$variant = $inteos_array[0]['Variant'];
+	    	$colordesc = $inteos_array[0]['ClrDesc'];
 
 	    	$qty = $inteos_array[0]['Produced'];
 	    	$standard_qty = $inteos_array[0]['BoxQuant'];
@@ -106,6 +109,17 @@ class SfusiAddController extends Controller {
 	    	// $size_to_search = str_replace("/","-",$size);
 
 	    	// dd($size_to_search);
+
+	    	$exist = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM sfusiStock WHERE po = '".$po."' AND size = '".$size."'"));
+
+	    	if ($exist) {
+	    		$exist_cartonbox = $exist[0]->cartonbox;
+	    		
+	    		if ($cartonbox == $exist_cartonbox) {
+					$msg = "This box is already on stock, ova kutija je vec u tabeli!";
+					return view('Add.error',compact('msg'));
+				}	
+	    	}	
 	    }
 		catch (\Illuminate\Database\QueryException $e) {
 			$msg = "Problem to get data from cb table. try agan.";
@@ -113,7 +127,7 @@ class SfusiAddController extends Controller {
 		}
 
 
-		return view('Add.checkqty', compact('cartonbox', 'po', 'po_status', 'style', 'color', 'size', 'qty', 'standard_qty', 'location'));
+		return view('Add.checkqty', compact('cartonbox', 'po', 'po_status', 'style', 'color','colordesc', 'size', 'qty', 'standard_qty', 'location'));
 	}
 
 	public function checkqty(Request $request) 
@@ -127,13 +141,14 @@ class SfusiAddController extends Controller {
 		$po = $input['po'];
 		$style = $input['style'];
 		$color = $input['color'];
+		$colordesc = $input['colordesc'];
 		$size = $input['size'];
 		$qty = (int)$input['qty'];
 		$standard_qty = (int)$input['standard_qty'];
 		$po_status = $input['po_status'];
 
 		if ($po_status == NULL) {
-			$po_status = "Open";
+			$po_status = "Released";
 		} else {
 			$po_status = "Closed";
 		}
@@ -154,10 +169,6 @@ class SfusiAddController extends Controller {
 			//$standard_qty_num = $standard_qty;
 			$noofboxes = ceil($sumofqty/$standard_qty);
 
-			// var_dump("sumofqty = ".$sumofqty);
-			// var_dump("standard_qty = ".$standard_qty);
-			// var_dump("noofboxes = ".$noofboxes);
-
 			$info = "";
 			$case = NULL;
 
@@ -166,7 +177,7 @@ class SfusiAddController extends Controller {
 
 				if ($exist_qty >= $qty) {
 					$info .= " take out garments from NEW and put inside OLD box on same location. ";
-					$msg = "OLD STAY";
+					$msg = "OLD BOX STAY";
 					$case = 1;
 
 					//Edit existing box in sfusiStock
@@ -189,7 +200,7 @@ class SfusiAddController extends Controller {
 
 				} else {
 					$info .= " take out garments from OLD box and put in NEW box on same location. ";
-					$msg = "NEW STAY";
+					$msg = "NEW BOX STAY";
 					$case = 2;
 
 					//Edit existing box in sfusiStock
@@ -219,7 +230,7 @@ class SfusiAddController extends Controller {
 				if ($exist_qty >= $qty) {
 					$info .= " take out garments from NEW box and fill up OLD box, after that NEW box put on same location. ";
 					$new_qty = $sumofqty - $standard_qty;
-					$msg = "NEW STAY +1(full)";
+					$msg = "NEW BOX STAY + OLD BOX TO FG";
 					$case = 3;
 
 					//Edit existing box in sfusiStock
@@ -244,7 +255,7 @@ class SfusiAddController extends Controller {
 				} else {
 					$info .= " take out garments from OLD box and fill up NEW box, after that OLD box put on same location. ";
 					$new_qty = $sumofqty - $standard_qty;
-					$msg = "OLD STAY +1(full)";
+					$msg = "OLD BOX STAY + NEW BOX TO FG";
 					$case = 4;
 
 					//Edit existing box in sfusiStock
@@ -270,7 +281,7 @@ class SfusiAddController extends Controller {
 			} elseif ($sumofqty = $standard_qty) {
 				// var_dump("");
 				$info .= "Sum of garments in OLD and NEW box are enaugth to fill up one box. ";
-				$msg = "EXACTLY ONE BOX";
+				$msg = "EXACTLY ONE BOX TO FG";
 				$case = 5;
 
 				//Delete existing box in sfusiStock
@@ -288,18 +299,11 @@ class SfusiAddController extends Controller {
 
 			}	
 		} else {
-			$info = 'Not on stock before';
+			$info = 'ADD TO STOCK';
 			$case = 0;	
 
-			return view('Add.new_box',compact('info','case','cartonbox','po','po_status','style','color','size','qty','standard_qty'));
+			return view('Add.new_box',compact('info','case','cartonbox','po','po_status','style','color','colordesc','size','qty','standard_qty'));
 		}
-
-
-		// dd($info);
-		   
-		// return view('Add.result', compact('info'));
-		// return Redirect::to('/table');
-		// return view('Add.index');
 
 	}
 	
@@ -315,11 +319,13 @@ class SfusiAddController extends Controller {
 		$po_status = $input['po_status'];
 		$style = $input['style'];
 		$color = $input['color'];
+		$colordesc = $input['colordesc'];
 		$size = $input['size'];
 		$qty = (int)$input['qty'];
 		$standard_qty = (int)$input['standard_qty'];
 		
-		$location = $input['location'];
+		$location_temp = strtoupper($input['location']);
+		$location = str_replace("'","-",$location_temp);
 
 		// Add new box to sfusiStock
 			try {
@@ -331,6 +337,7 @@ class SfusiAddController extends Controller {
 
 				$table->style = $style;
 				$table->color = $color;
+				$table->colordesc = $colordesc;
 				$table->size = $size;
 
 				$table->qty = $qty;
@@ -348,7 +355,7 @@ class SfusiAddController extends Controller {
 				return view('Add.error',compact('msg'));
 			}
 
-		return Redirect::to('/table');
+		return Redirect::to('/add');
 	}
 
 	public function move()
@@ -388,7 +395,7 @@ class SfusiAddController extends Controller {
 		$this->validate($request, ['location' => 'required']);
 		$inteosinput = $request->all(); 
 
-		$location = $inteosinput['location'];
+		$location = strtoupper($inteosinput['location']);
 
 		//Edit existing box in sfusiStock
 		try {

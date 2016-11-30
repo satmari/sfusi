@@ -41,6 +41,11 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/') }}">Home</a></li>
+					<li><a href="{{ url('/add') }}">Add new SFUSI box</a></li>
+					<li><a href="{{ url('/refresh') }}">SFUSI stock TABLE</a></li>
+					<li><a href="{{ url('/move') }}">Move SFUSI box</a></li>
+					<li><a href="{{ url('/removecb') }}">Remove SFUSI box</a></li>
+					
 				</ul>
 				{{-- 
 				<ul class="nav navbar-nav navbar-right">

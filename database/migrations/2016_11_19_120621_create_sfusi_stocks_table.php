@@ -21,6 +21,7 @@ class CreateSfusiStocksTable extends Migration {
 			$table->string('po_status', 24);
 			$table->string('style', 12);
 			$table->string('color', 12);
+			$table->string('colordesc', 64);
 			$table->string('size', 8);
 
 			$table->integer('qty');
@@ -30,8 +31,14 @@ class CreateSfusiStocksTable extends Migration {
 
 			$table->string('coment', 64)->nullable();
 
+			$table->dateTime('lastused', 32)->nullable();
+			$table->string('flash', 32)->nullable();
 			$table->string('status', 32)->nullable();
-			$table->string('coloumn', 32)->nullable();
+			$table->string('flag', 32)->nullable();
+
+			$table->string('coloumn1', 32)->nullable();
+			$table->string('coloumn2', 32)->nullable();
+			$table->string('coloumn3', 32)->nullable();
 
 			$table->timestamps();
 		});
