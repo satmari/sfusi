@@ -26,6 +26,7 @@ Route::post('move_to_location/{id}', 'SfusiAddController@move_to_location');
 
 //Sfusi Table
 Route::get('table', 'SfusiTableController@index');
+Route::get('table2', 'SfusiTableController@index2');
 Route::get('table/edit/{id}', 'SfusiTableController@edit');
 Route::post('table/edit_update/{id}', 'SfusiTableController@edit_update');
 Route::get('table/remove/{id}', 'SfusiTableController@remove');

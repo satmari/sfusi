@@ -300,9 +300,24 @@ class SfusiAddController extends Controller {
 			}	
 		} else {
 			$info = 'ADD TO STOCK';
-			$case = 0;	
+			$case = 0;
+			$msg = "";
 
-			return view('Add.new_box',compact('info','case','cartonbox','po','po_status','style','color','colordesc','size','qty','standard_qty'));
+			$exist_any = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock WHERE po = '".$po."' "));
+			if ($exist_any) {
+				// dd(count($exist_any));
+				for ($i=0; $i < count($exist_any); $i++) { 
+					$msg .= "Location of box for size: ".$exist_any[$i]->size." is: <b>".$exist_any[$i]->location." </br>";
+				}
+				foreach ($exist_any as $value) {
+					// dd($exist_any);
+					
+				}
+			} else {
+				$msg = "This is first box for this PO";
+			}
+
+			return view('Add.new_box',compact('info','msg','case','cartonbox','po','po_status','style','color','colordesc','size','qty','standard_qty'));
 		}
 
 	}

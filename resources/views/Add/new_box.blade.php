@@ -8,7 +8,7 @@
 				<div class="panel-heading"><b><big>Add box location?</big></b></div>
 				<br>
 				<p>{{ $info }}</p>
-
+				<p><b>{!! $msg !!}</b></p>
 				{{--
 				<div>
 					@if ($case == 0)

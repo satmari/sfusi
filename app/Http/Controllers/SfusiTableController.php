@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use DateTime;
+use Carbon\Carbon;
 
 use App\sfusiStock;
 use DB;
@@ -18,6 +20,24 @@ class SfusiTableController extends Controller {
 
 		$data = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock"));
 		return view('Table.index',compact('data'));
+	}
+
+	public function index2()
+	{
+		//
+		$data = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock"));
+
+		$today = new DateTime();
+		$db = $data[30]->lastused;
+		
+		// $end = Carbon::parse($db);
+		// dd($end);
+		// $now = Carbon::now();
+
+		// $length = $end->diffInDays($now);
+		// dd($now." , ".$end." , ".$length);
+
+		return view('Table.index2',compact('data'));
 	}
 
 	public function edit($id)

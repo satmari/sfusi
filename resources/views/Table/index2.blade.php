@@ -42,18 +42,18 @@
 				        <tr>
 				           {{-- <th>id</th> --}}
 				           <th>Cartonbox</th>
-				           <th data-sortable="true" style="background-color: cornsilk;"><b>Po</b></th>
+				           <th style="background-color: cornsilk;"><b>Po</b></th>
 				           {{-- <th>Po status</th> --}}
 				           <th>Size</th>
 				           <th>Style</th>
 				           <th>Color</th>
 				           <th>ColorDesc</th>
 				           <th style="background-color: aliceblue;">Qty</th>
-				           <th data-sortable="true" style="background-color: beige;">Location</th>
+				           <th style="background-color: beige;">Location</th>
 				           <th>Standard Qty</th>
-				           <th style="background-color: azure;">Comment</th>
+				           <th style="background-color: antiquewhite;">Comment</th>
 				           <th>Last used</th>
-				           <th data-sortable="true">In days</th>
+				           <th>In days</th>
 				           <th>Status</th>
 				           <th>Flash</th>
 				           <th>Flag</th>
@@ -80,9 +80,9 @@
 				        	<td style="background-color: aliceblue;">{{ $d->qty }}</td>
 				        	<td style="background-color: beige;">{{ $d->location }}</td>
 				        	<td>{{ $d->standard_qty }}</td>
-				        	<td style="background-color: azure;">{{ $d->coment }}</td>
+				        	<td style="background-color: antiquewhite;">{{ $d->coment }}</td>
 				        	<td>{{ Carbon\Carbon::parse($d->lastused)->format('d.m.Y') }}</td>
-				        	<td class="days">{{ Carbon\Carbon::parse($d->lastused)->diffInDays(Carbon\Carbon::now()) }}</td>
+				        	<td>{{ Carbon\Carbon::parse($d->lastused)->diffInDays(Carbon\Carbon::now()) }}</td>
 				        	<td>{{ $d->status }}</td>
 				        	<td>{{ $d->flash }}</td>
 				        	<td>{{ $d->flag }}</td>

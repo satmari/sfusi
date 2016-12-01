@@ -135,18 +135,18 @@ $(function() {
   		// }
 	//});
 
-	// $('.to-print').each(function(){
-	// 	var qty = $(this).html();
-	// 	//console.log(qty);
+	$('.days').each(function(){
+		var qty = $(this).html();
+		//console.log(qty);
 
-	// 	if (qty == 0 ) {
-	// 		$(this).addClass('zuto');
-	// 	} else if (qty > 0) {
-	// 		$(this).addClass('zeleno');
-	// 	} else if (qty < 0 ) {	
-	// 		$(this).addClass('crveno');
-	// 	}
-	// });
+		if (qty < 7 ) {
+			$(this).addClass('zeleno');
+		} else if ((qty >= 7) && (qty <= 15)) {
+			$(this).addClass('zuto');
+		} else if (qty > 15 ) {	
+			$(this).addClass('crveno');
+		}
+	});
 
 	// $('.status').each(function(){
 	// 	var status = $(this).html();
