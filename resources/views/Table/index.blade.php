@@ -42,14 +42,14 @@
 				        <tr>
 				           {{-- <th>id</th> --}}
 				           <th>Cartonbox</th>
-				           <th data-sortable="true" style="background-color: cornsilk;"><b>Po</b></th>
+				           <th style="background-color: cornsilk;"><b>Po</b></th>
 				           {{-- <th>Po status</th> --}}
 				           <th>Size</th>
 				           <th>Style</th>
 				           <th>Color</th>
 				           <th>ColorDesc</th>
-				           <th style="background-color: aliceblue;">Qty</th>
-				           <th data-sortable="true" style="background-color: beige;">Location</th>
+				           <th style="background-color: aliceblue;"><b>Qty</b></th>
+				           <th style="background-color: beige;"><b>Location</b></th>
 				           <th>Standard Qty</th>
 				           <th style="background-color: azure;">Comment</th>
 				           <th>Last used</th>
@@ -77,8 +77,8 @@
 				        	<td>{{ $d->style }}</td>
 				        	<td>{{ $d->color }}</td>
 				        	<td>{{ $d->colordesc }}</td>
-				        	<td style="background-color: aliceblue;">{{ $d->qty }}</td>
-				        	<td style="background-color: beige;">{{ $d->location }}</td>
+				        	<td style="background-color: aliceblue;"><b>{{ $d->qty }}</b></td>
+				        	<td style="background-color: beige;"><b>{{ $d->location }}</b></td>
 				        	<td>{{ $d->standard_qty }}</td>
 				        	<td style="background-color: azure;">{{ $d->coment }}</td>
 				        	<td>{{ Carbon\Carbon::parse($d->lastused)->format('d.m.Y') }}</td>

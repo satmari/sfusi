@@ -83,6 +83,13 @@
 	<script src="{{ asset('/js/FileSaver.min.js') }}" type="text/javascript" ></script>
 	<script src="{{ asset('/js/bootstrap-table-export.js') }}" type="text/javascript" ></script>
 
+	<script type="text/javascript">
+	   $.ajaxSetup({
+	       headers: {
+	           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	       }
+	   });
+	</script>
 
 <script type="text/javascript">
 $(function() {
@@ -97,6 +104,7 @@ $(function() {
 	// 	autoFocus: true,
 	// 	source: '{{ URL('getmoduledata')}}'
 	// });
+
 	$('#filter').keyup(function () {
 
         var rex = new RegExp($(this).val(), 'i');
@@ -118,9 +126,9 @@ $(function() {
   	});
 
   	
-	// $('#sort').bootstrapTable({
-    
-	// });
+	$('#sort').bootstrapTable({
+    	
+	});
 
 	//$('.table tr').each(function(){
   		
@@ -147,6 +155,7 @@ $(function() {
 			$(this).addClass('crveno');
 		}
 	});
+
 
 	// $('.status').each(function(){
 	// 	var status = $(this).html();

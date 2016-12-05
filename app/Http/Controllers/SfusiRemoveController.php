@@ -35,7 +35,7 @@ class SfusiRemoveController extends Controller {
 
 		if ($cbcode) {
 
-			$cb = DB::connection('sqlsrv')->select(DB::raw("SELECT id,cartonbox,qty FROM sfusiStock WHERE cartonbox = ".$cbcode));
+			$cb = DB::connection('sqlsrv')->select(DB::raw("SELECT id,cartonbox,po,size,qty FROM sfusiStock WHERE cartonbox = ".$cbcode));
 			// dd($cb);
 
 			if (empty($cb)) {
@@ -46,11 +46,16 @@ class SfusiRemoveController extends Controller {
 				$id = $cb[0]->id;
 				$cartonbox = $cbcode;
 				$qty = $cb[0]->qty;
+				$size = $cb[0]->size;
+				$po = $cb[0]->po;
+
 
 				$cbarray = array(
 				'id' => $id,
 				'cartonbox' => $cartonbox,
-				'qty' => $qty
+				'qty' => $qty,
+				'size' => $size,
+				'po' => $po
 				);
 
 				Session::push('cb_to_remove_array',$cbarray);

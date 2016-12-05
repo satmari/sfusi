@@ -18,7 +18,8 @@
 				--}}
 
 				{!! Form::open(['url' => 'add_new_box']) !!}
-				<input type="hidden" name="_token" id="_token" value="<?php echo csrf_token(); ?>">
+				<input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+				<meta name="csrf-token" content="{{ csrf_token() }}" />
 
 				{!!Form::hidden('cartonbox', $cartonbox) !!}
 				{!!Form::hidden('po', $po) !!}

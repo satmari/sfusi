@@ -8,7 +8,8 @@
 				<div class="panel-heading"><b>Move carton box</b></div>
 				
 				{!! Form::model($box , ['method' => 'POST', 'url' => '/move_to_location/'.$box->id /*, 'class' => 'form-inline'*/]) !!}
-				<input type="hidden" name="_token" id="_token" value="<?php echo csrf_token(); ?>">
+				<input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+				<meta name="csrf-token" content="{{ csrf_token() }}" />
 
 				<div class="panel-body">
 					<span>Location: <span style="color:red">*</span></span>

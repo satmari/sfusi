@@ -9,7 +9,7 @@
 				<br>
 				
 					{!! Form::model($box , ['method' => 'POST', 'url' => '/table/edit_update/'.$box->id /*, 'class' => 'form-inline'*/]) !!}
-
+					
 					<div class="panel-body">
 						<span>Qty: </span>
 						{!! Form::input('number', 'qty', $box->qty, ['class' => 'form-control']) !!}

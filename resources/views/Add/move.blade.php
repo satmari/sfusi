@@ -8,8 +8,7 @@
 				<div class="panel-heading"><b>Move carton box</b></div>
 				
 				{!! Form::open(['url' => 'move_box']) !!}
-				<input type="hidden" name="_token" id="_token" value="<?php echo csrf_token(); ?>">
-
+				<meta name="csrf-token" content="{{ csrf_token() }}" />
 				<div class="panel-body">
 					
 					{!! Form::input('number', 'inteos_cb_code', null, ['class' => 'form-control', 'autofocus' => 'autofocus']) !!}

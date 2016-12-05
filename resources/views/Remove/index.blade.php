@@ -12,7 +12,8 @@
 				@endif
 							
 				{!! Form::open(['url' => 'removecb\destroy']) !!}
-				<input type="hidden" name="_token" id="_token" value="<?php echo csrf_token(); ?>">
+				<input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+				<meta name="csrf-token" content="{{ csrf_token() }}" />
 				
 				<div class="panel-body">
 					{!! Form::input('number', 'cb_to_remove', null, ['class' => 'form-control', 'autofocus' => 'autofocus']) !!}
@@ -40,6 +41,8 @@
 					<table class="table">
 						<thead>
 							<td>Cartonbox</td>
+							<td>Po</td>
+							<td>Size</td>
 							<td>Qty</td>
 						</thead>
 
@@ -54,11 +57,26 @@
 					   		</td>
 					   		<td>
 							@foreach($array as $key => $value)
+								@if($key == 'po')
+						    		<b>{{ substr($value, 9, 5) }}</b>
+						    	@endif
+						    @endforeach
+					   		</td>
+					   		<td>
+							@foreach($array as $key => $value)
+								@if($key == 'size')
+						    		<b>{{ $value }}</b>
+						    	@endif
+						    @endforeach
+					   		</td>
+					   		<td>
+							@foreach($array as $key => $value)
 								@if($key == 'qty')
 						    		{{ $value }}
 						    	@endif
 						    @endforeach
 					   		</td>
+					   		
 					    </tr>
 
 					@endforeach
