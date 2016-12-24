@@ -22,7 +22,7 @@
 				      </tr>
 				    </tbody>
 				  </table>
-				  	<p><b>SFUSI box quantity: {{  $qty+$exist_qty }}</b></p>
+				  	<p><b>SFUSI box quantity:  <span style="font-size: 20px;">{{  $qty+$exist_qty }}</span></b></p>
 					<p>Standard box quantity: {{ $standard_qty}}</p>
 				</div>
 				@endif
@@ -42,7 +42,7 @@
 				      </tr>
 				    </tbody>
 				  </table>
-				  	<p><b>SFUSI box quantity: {{  $qty+$exist_qty }}</b></p>
+				  	<p><b>SFUSI box quantity:  <span style="font-size: 20px;">{{  $qty+$exist_qty }}</span></b></p>
 					<p>Standard box quantity: {{ $standard_qty}}</p>
 				</div>
 				@endif
@@ -62,7 +62,7 @@
 				      </tr>
 				    </tbody>
 				  </table>
-				  	<p><b>SFUSI box quantity: {{  $qty+$exist_qty-$standard_qty }}</b></p>
+				  	<p><b>SFUSI box quantity:  <span style="font-size: 20px;">{{  $qty+$exist_qty-$standard_qty }}</span></b></p>
 					<p>Standard box quantity: {{ $standard_qty}}</p>
 				</div>
 				@endif
@@ -82,7 +82,7 @@
 				      </tr>
 				    </tbody>
 				  </table>
-				  	<p><b>SFUSI box quantity: {{  $qty+$exist_qty-$standard_qty }}</b></p>
+				  	<p><b>SFUSI box quantity:  <span style="font-size: 20px;">{{  $qty+$exist_qty-$standard_qty }}</span></b></p>
 					<p>Standard box quantity: {{ $standard_qty}}</p>
 				</div>
 				@endif
@@ -102,7 +102,7 @@
 				      </tr>
 				    </tbody>
 				  </table>
-				  	<p><b>SFUSI box quantity: {{  $qty+$exist_qty-$standard_qty }}</b></p>
+				  	<p><b>SFUSI box quantity: <span style="font-size: 20px;">{{  $qty+$exist_qty-$standard_qty }}</span></b></p>
 					<p>Standard box quantity: {{ $standard_qty}}</p>
 				</div>
 				@endif
