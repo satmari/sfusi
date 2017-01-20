@@ -46,6 +46,7 @@
 					<li><a href="{{ url('/refresh') }}">SFUSI stock TABLE</a></li>
 					<li><a href="{{ url('/move') }}">Move SFUSI box</a></li>
 					<li><a href="{{ url('/removecb') }}">Remove SFUSI box</a></li>
+					<li><a href="{{ url('/table_s') }}">Ship TABLE</a></li>
 					
 				</ul>
 				{{-- 

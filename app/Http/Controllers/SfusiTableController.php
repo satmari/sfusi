@@ -9,6 +9,7 @@ use DateTime;
 use Carbon\Carbon;
 
 use App\sfusiStock;
+use App\shipStock;
 use DB;
 
 class SfusiTableController extends Controller {
@@ -28,15 +29,8 @@ class SfusiTableController extends Controller {
 		$data = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock"));
 
 		$today = new DateTime();
-		$db = $data[30]->lastused;
+		// $db = $data[30]->lastused;
 		
-		// $end = Carbon::parse($db);
-		// dd($end);
-		// $now = Carbon::now();
-
-		// $length = $end->diffInDays($now);
-		// dd($now." , ".$end." , ".$length);
-
 		return view('Table.index2',compact('data'));
 	}
 
@@ -91,6 +85,71 @@ class SfusiTableController extends Controller {
 		}
 		
 		return Redirect::to('/table');
+	}
+
+	public function remove_ship($id)
+	{
+		
+		$msg1="";
+					
+		// $ship_table = shipStock::where('cartonbox', '=', $line['id']);
+		$sfusi_table = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock WHERE id = ". $id));
+
+		$style = $sfusi_table[0]->style;
+		$size = $sfusi_table[0]->size;
+		$color = $sfusi_table[0]->color;
+		// var_dump($style);
+
+		$ship_table = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM shipStock WHERE style = '".$style."' AND color = '".$color."' AND size = '".$size."'"));
+		// dd($ship_table);
+
+		if (empty($ship_table)){
+
+			// Add to ship
+			try {
+				$table = new shipStock;
+
+				$table->cartonbox = $sfusi_table[0]->cartonbox;
+				$table->po = $sfusi_table[0]->po;
+				$table->po_status = $sfusi_table[0]->po_status;
+
+				$table->style = $sfusi_table[0]->style;
+				$table->color = $sfusi_table[0]->color;
+				$table->colordesc = $sfusi_table[0]->colordesc;
+				$table->size = $sfusi_table[0]->size;
+
+				$table->qty = $sfusi_table[0]->qty;
+				$table->standard_qty = $sfusi_table[0]->standard_qty;
+
+				$table->location = "SHIP"; 
+
+				$table->save();
+			}
+			catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save cb in shipstock table";
+				return view('Remove.error',compact('msg'));
+			}
+
+			// Delete from sfusiStock
+			$results = sfusiStock::where('cartonbox', '=', $sfusi_table[0]->cartonbox)->delete();	
+			
+		} else {
+			$msg1 = $sfusi_table[0]->cartonbox;
+		}
+		
+
+		if ($msg1 != "") {
+			// Session::set('cb_to_remove_array', null);
+			$msg = $msg1." This cartonbox have SKU that already exist in SHIP table";
+			return view('Remove.error',compact('msg'));
+		}
+		
+		// Session::set('cb_to_remove_array', null);
+		$msg = "All scanned Cartonbox succesfuly removed from Stock";
+		return view('Remove.success',compact('msg'));
+		
+
+		// return Redirect::to('/table');
 	}
 
 	public function refresh()

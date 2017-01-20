@@ -95,6 +95,7 @@
 				@endif
 
 				{!! Form::open(['url' => 'removecb\destroycb']) !!}
+				{{-- {!! Form::open(['url' => 'removecb\destroycb2']) !!} --}}
 				<input type="hidden" name="_token" id="_token" value="<?php echo csrf_token(); ?>">
 
 
