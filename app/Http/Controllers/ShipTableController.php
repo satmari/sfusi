@@ -35,4 +35,19 @@ class ShipTableController extends Controller {
 		return view('home');
 	}
 
+	public function remove_ship($id)
+	{
+		try {
+			$table = shipStock::findOrFail($id);
+		
+			$table->delete();
+		}
+		catch (\Illuminate\Database\QueryException $e) {
+			$msg = "Problem to delete in shipStock table";
+			return view('Add.error',compact('msg'));		
+		}
+		
+		return Redirect::to('/table_s');
+	}
+
 }

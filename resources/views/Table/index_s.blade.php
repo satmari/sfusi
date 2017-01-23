@@ -7,7 +7,7 @@
 			<div class="panel panel-default">
 				<!-- <div class="panel-heading h-n">SFUSI stock table</div> -->
 
-				<a href="{{ url('/remove_ship_table') }}" class="btn btn-danger btn-s">Remove all lines</a>
+				<a href="{{ url('/remove_ship_table') }}" class="btn btn-danger btn-s">Remove all box</a>
 				<br>
                 <div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
@@ -57,6 +57,7 @@
 				           <th>Flash</th>
 				           <th>Flag</th> -->
 				           <th>Edited at</th>
+				           <th></th>
 
 				        </tr>
 				    </thead>
@@ -83,6 +84,7 @@
 				        	<td>{{ $d->flash }}</td>
 				        	<td>{{ $d->flag }}</td> --}}
 				        	<td>{{ substr($d->updated_at, 0, 19) }}</td>
+				        	<td><a href="{{ url('/table_s/remove/'.$d->id) }}" class="btn btn-danger btn-xs center-block">Remove</a></td>
 
 				        </tr>
 				    

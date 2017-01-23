@@ -29,12 +29,13 @@ Route::get('table', 'SfusiTableController@index');
 Route::get('table2', 'SfusiTableController@index2');
 Route::get('table/edit/{id}', 'SfusiTableController@edit');
 Route::post('table/edit_update/{id}', 'SfusiTableController@edit_update');
-Route::get('table/remove/{id}', 'SfusiTableController@remove');
-// Route::get('table/remove/{id}', 'SfusiTableController@remove_ship');
+// Route::get('table/remove/{id}', 'SfusiTableController@remove');
+Route::get('table/remove/{id}', 'SfusiTableController@remove_ship');
 
 //Shgip Table
 Route::get('table_s', 'ShipTableController@index');
 Route::get('remove_ship_table', 'ShipTableController@remove');
+Route::get('table_s/remove/{id}', 'ShipTableController@remove_ship');
 
 //SfusiSearch
 Route::get('search', 'SfusiSearchController@index');
@@ -47,13 +48,12 @@ Route::get('export', 'ExportController@index');
 
 //SfusiRemove
 // Route::get('remove', 'SfusiRemoveController@index');
-
 Route::get('removecb', 'SfusiRemoveController@index');
 Route::get('removecb/destroy', 'SfusiRemoveController@destroy');
 Route::post('removecb/destroy', 'SfusiRemoveController@destroy');
 Route::get('removecb/destroycb', 'SfusiRemoveController@destroycb');
-Route::post('removecb/destroycb', 'SfusiRemoveController@destroycb');
-Route::post('removecb/destroycb2', 'SfusiRemoveController@destroycb2');
+// Route::post('removecb/destroycb', 'SfusiRemoveController@destroycb');
+Route::post('removecb/destroycb', 'SfusiRemoveController@destroycb2');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
