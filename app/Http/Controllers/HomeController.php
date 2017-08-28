@@ -36,6 +36,7 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
+		Session::set('cb_to_remove', null);
 		Session::set('cb_to_remove_array', null);
 		return view('home');
 	}

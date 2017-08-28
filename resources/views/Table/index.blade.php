@@ -42,9 +42,9 @@
 				        <tr>
 				           {{-- <th>id</th> --}}
 				           <th>Cartonbox</th>
-				           <th style="background-color: cornsilk;"><b>Po</b></th>
+				           <th style="background-color: cornsilk;" data-sortable="true"><b>Po</b></th>
 				           {{-- <th>Po status</th> --}}
-				           <th>Size</th>
+				           <th data-sortable="true">Size</th>
 				           <th>Style</th>
 				           <th>Color</th>
 				           <th>ColorDesc</th>

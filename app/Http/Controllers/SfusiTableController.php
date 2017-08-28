@@ -98,9 +98,10 @@ class SfusiTableController extends Controller {
 		$style = $sfusi_table[0]->style;
 		$size = $sfusi_table[0]->size;
 		$color = $sfusi_table[0]->color;
+		$po = $sfusi_table[0]->po;
 		// var_dump($style);
 
-		$ship_table = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM shipStock WHERE style = '".$style."' AND color = '".$color."' AND size = '".$size."'"));
+		$ship_table = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM shipStock WHERE po = '".$po."' AND size = '".$size."'"));
 		// dd($ship_table);
 
 		if (empty($ship_table)){
@@ -140,7 +141,7 @@ class SfusiTableController extends Controller {
 
 		if ($msg1 != "") {
 			// Session::set('cb_to_remove_array', null);
-			$msg = $msg1." This cartonbox have SKU that already exist in SHIP table";
+			$msg = $msg1." This cartonbox have PO + SIZE that already exist in SHIP table";
 			return view('Remove.error',compact('msg'));
 		}
 		
@@ -222,7 +223,6 @@ class SfusiTableController extends Controller {
 					// return Redirect::to('/table');
 				}
 
-
 				// Add Nav details (flash, status, flag)
 
 				// NAV - PO information
@@ -231,6 +231,7 @@ class SfusiTableController extends Controller {
 					      ,(CASE WHEN [Status] = '3' THEN 'Released' WHEN [Status] = '4' THEN 'Finished' WHEN [Status] = '0' THEN 'Simulate' END) AS Status
 					      /*,[Flash Order]*/
 					      ,(CASE WHEN [Flash Order] = '0' THEN '' WHEN [Flash Order] = '1' THEN 'Flash' END) AS Flash
+					      ,[Cutting Prod_ Line] as Flash2
 					      /*,[To be finished]*/
 					      ,(CASE WHEN [To be finished] = '0' THEN '' WHEN [Flash Order] = '1' THEN 'To be fin' END) AS To_be_finished
 					      /*,[To Be Consumned]*/
@@ -243,7 +244,8 @@ class SfusiTableController extends Controller {
 				// dd($nav);
 
 				$status = $nav[0]->Status;
-				$flash = $nav[0]->Flash;
+				// $flash = $nav[0]->Flash;
+				$flash = $nav[0]->Flash2;
 				$To_be_finished = $nav[0]->To_be_finished;
 				$To_be_consumed = $nav[0]->To_be_consumed;
 
@@ -264,7 +266,6 @@ class SfusiTableController extends Controller {
 
 			}
 		}
-	    	
 		return Redirect::to('/table');
 	}
 

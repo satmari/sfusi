@@ -55,6 +55,10 @@ Route::get('removecb/destroycb', 'SfusiRemoveController@destroycb');
 // Route::post('removecb/destroycb', 'SfusiRemoveController@destroycb');
 Route::post('removecb/destroycb', 'SfusiRemoveController@destroycb2');
 
+// addlog
+Route::get('addlogtable', 'adlogTableControler@index');
+Route::get('clearlogtable', 'adlogTableControler@clearlogtable');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

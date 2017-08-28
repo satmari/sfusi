@@ -137,11 +137,11 @@ class SfusiRemoveController extends Controller {
 				$style = $sfusi_table[0]->style;
 				$size = $sfusi_table[0]->size;
 				$color = $sfusi_table[0]->color;
+				$po = $sfusi_table[0]->po;
 				// var_dump($style);
 
-				$ship_table = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM shipStock WHERE style = '".$style."' AND color = '".$color."' AND size = '".$size."'"));
-				// dd($ship_table);
-
+				$ship_table = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM shipStock WHERE po = '".$po."' AND size = '".$size."'"));
+				
 				if (empty($ship_table)){
 
 					// Add to ship
@@ -179,16 +179,19 @@ class SfusiRemoveController extends Controller {
 			}
 
 			if ($msg1 != "") {
+				Session::set('cb_to_remove', null);
 				Session::set('cb_to_remove_array', null);
 				$msg = $msg1." This cartonbox have SKU that already exist in SHIP table";
 				return view('Remove.error',compact('msg'));
 			}
 			
+			Session::set('cb_to_remove', null);
 			Session::set('cb_to_remove_array', null);
 			$msg = "All scanned Cartonbox succesfuly removed from Stock";
 			return view('Remove.success',compact('msg'));
 		}
 
+		Session::set('cb_to_remove', null);
 		Session::set('cb_to_remove_array', null);
 		$msg = "List of Cartonbox to delete is empty";
 		return view('Remove.success',compact('msg'));		

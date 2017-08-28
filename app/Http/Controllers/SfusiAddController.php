@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
 use App\sfusiStock;
+use App\addlog;
 use DB;
 
 class SfusiAddController extends Controller {
@@ -40,29 +41,34 @@ class SfusiAddController extends Controller {
 			$inteos = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
 				cb.BoxNum,
 				cb.Produced,
+				cb.Module,
 				po.POnum,
 				po.BoxQuant,
 				po.POClosed,
 				st.StyCod,
 				sku.Variant,
-				sku.ClrDesc
-
+				sku.ClrDesc,
+				m.ModNam
+				
 				FROM            dbo.CNF_CartonBox AS cb 
 				LEFT OUTER JOIN dbo.CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
 				LEFT OUTER JOIN dbo.CNF_SKU AS sku ON po.SKUKEY = sku.INTKEY
 				LEFT OUTER JOIN dbo.CNF_STYLE AS st ON sku.STYKEY = st.INTKEY
 				LEFT OUTER JOIN dbo.CNF_BlueBox AS bb ON cb.BBcreated = bb.INTKEY
+				LEFT OUTER JOIN dbo.CNF_Modules AS m ON cb.Module= m.Module
 				
 				WHERE			cb.BoxNum = :somevariable
 
 				GROUP BY		cb.BoxNum,
 								cb.Produced,
+								cb.Module,
 								po.POnum,
 								po.BoxQuant,
 								po.POClosed,
 								st.StyCod,
 								sku.Variant,
-								sku.ClrDesc"
+								sku.ClrDesc,
+								m.ModNam"
 				), array(
 					'somevariable' => $inteoscbcode
 			));
@@ -101,13 +107,13 @@ class SfusiAddController extends Controller {
 	    	$qty = $inteos_array[0]['Produced'];
 	    	$standard_qty = $inteos_array[0]['BoxQuant'];
 
+	    	$module = $inteos_array[0]['ModNam'];
+
 	    	$location = NULL;
 
 	    	list($color, $size) = explode('-', $variant);
 	    	// dd($size);
-
 	    	// $size_to_search = str_replace("/","-",$size);
-
 	    	// dd($size_to_search);
 
 	    	$exist = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM sfusiStock WHERE po = '".$po."' AND size = '".$size."'"));
@@ -126,6 +132,30 @@ class SfusiAddController extends Controller {
 			return view('Add.error',compact('msg'));
 		}
 
+		// Save in addlog table
+		try {
+
+			$table = new addlog;
+
+			$table->cartonbox = $cartonbox;
+			$table->po = $po;
+			
+			$table->style = $style;
+			$table->color = $color;
+			$table->colordesc = $colordesc;
+			$table->size = $size;
+
+			$table->qty = $qty;
+			$table->standard_qty = $standard_qty;
+
+			$table->module = $module;
+
+			$table->save();
+		}
+			catch (\Illuminate\Database\QueryException $e) {
+			$msg = "Problem to save data to addlog table.";
+			return view('Add.error',compact('msg'));
+		}
 
 		return view('Add.checkqty', compact('cartonbox', 'po', 'po_status', 'style', 'color','colordesc', 'size', 'qty', 'standard_qty', 'location'));
 	}
