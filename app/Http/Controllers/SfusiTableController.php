@@ -233,7 +233,7 @@ class SfusiTableController extends Controller {
 					      ,(CASE WHEN [Flash Order] = '0' THEN '' WHEN [Flash Order] = '1' THEN 'Flash' END) AS Flash
 					      ,[Cutting Prod_ Line] as Flash2
 					      /*,[To be finished]*/
-					      ,(CASE WHEN [To be finished] = '0' THEN '' WHEN [Flash Order] = '1' THEN 'To be fin' END) AS To_be_finished
+					      ,(CASE WHEN [To be finished] = '0' THEN '' WHEN [To be finished] = '1' THEN 'To be fin' END) AS To_be_finished
 					      /*,[To Be Consumned]*/
 					      ,(CASE WHEN [To Be Consumned] = '0' THEN '' WHEN [To Be Consumned] = '1' THEN 'To be con' END) AS To_be_consumed
 					  FROM [Gordon_LIVE].[dbo].[GORDON\$Production Order]
@@ -249,7 +249,8 @@ class SfusiTableController extends Controller {
 				$To_be_finished = $nav[0]->To_be_finished;
 				$To_be_consumed = $nav[0]->To_be_consumed;
 
-				$flag = $To_be_consumed.$To_be_finished;
+				$flag = $To_be_consumed." ".$To_be_finished;
+				// dd($flag);
 
 				try {
 					$box = sfusiStock::findOrFail($id);
