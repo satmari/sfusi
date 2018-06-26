@@ -71,7 +71,7 @@
 				        <tr>
 				        	{{-- <td>{{ $d->id }}</td> --}}
 				        	<td>{{ $d->cartonbox }}</td>
-				        	<td style="background-color: cornsilk;"><b>{{ substr($d->po, 9, 5) }}</b></td>
+				        	<td style="background-color: cornsilk;"><b>{{ substr($d->po, 8, 6) }}</b></td>
 				        	{{-- <td>{{ $d->po_status }}</td> --}}
 				        	<td>{{ $d->size }}</td>
 				        	<td>{{ $d->style }}</td>

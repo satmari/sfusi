@@ -17,6 +17,7 @@ class CreateSfusiStocksTable extends Migration {
 			$table->increments('id');
 
 			$table->string('cartonbox');
+			$table->string('cartonbox_old')->nullable(); //added latter
 			$table->string('po', 24);
 			$table->string('po_status', 24);
 			$table->string('style', 12);

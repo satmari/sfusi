@@ -32,7 +32,7 @@ Route::post('table/edit_update/{id}', 'SfusiTableController@edit_update');
 // Route::get('table/remove/{id}', 'SfusiTableController@remove');
 Route::get('table/remove/{id}', 'SfusiTableController@remove_ship');
 
-//Shgip Table
+//Ship Table
 Route::get('table_s', 'ShipTableController@index');
 Route::get('remove_ship_table', 'ShipTableController@remove');
 Route::get('table_s/remove/{id}', 'ShipTableController@remove_ship');

@@ -39,6 +39,7 @@
 				        <tr>
 				           {{-- <th>id</th> --}}
 				           <th>Cartonbox</th>
+				           <th>Cartonbox used</th>
 				           <th style="background-color: cornsilk;" data-sortable="true"><b>Po</b></th>
 				           <th>Style</th>
 				           <th data-sortable="true">Size</th>
@@ -58,7 +59,8 @@
 				        <tr>
 				        	{{-- <td>{{ $d->id }}</td> --}}
 				        	<td>{{ $d->cartonbox }}</td>
-				        	<td style="background-color: cornsilk;"><b>{{ substr($d->po, 9, 5) }}</b></td>
+				        	<td>{{ $d->cartonbox_old }}</td>
+				        	<td style="background-color: cornsilk;"><b>{{ substr($d->po, 8, 6) }}</b></td>
 				        	<td>{{ $d->style }}</td>
 				        	<td>{{ $d->size }}</td>
 				        	<td>{{ $d->color }}</td>

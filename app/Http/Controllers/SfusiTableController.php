@@ -111,6 +111,7 @@ class SfusiTableController extends Controller {
 				$table = new shipStock;
 
 				$table->cartonbox = $sfusi_table[0]->cartonbox;
+				$table->cartonbox_old = $sfusi_table[0]->cartonbox_old;
 				$table->po = $sfusi_table[0]->po;
 				$table->po_status = $sfusi_table[0]->po_status;
 

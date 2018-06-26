@@ -17,6 +17,7 @@ class CreateAddlogsTable extends Migration {
 			$table->increments('id');
 
 			$table->string('cartonbox');
+			$table->string('cartonbox_old')->nullable(); //added latter
 			$table->string('po', 24)->nullable();
 			$table->string('style', 12)->nullable();
 			$table->string('color', 12)->nullable();
