@@ -7,6 +7,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading h-n"><big>Add log table</big></div>
 				<a href="{{ url('/clearlogtable') }}" class="btn btn-danger">Clear Log table</a>
+				<a href="{{ url('/deletelogtable') }}" class="btn btn-danger">Delete Log table FROM TO</a>
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>

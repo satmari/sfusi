@@ -109,10 +109,26 @@ class SfusiAddController extends Controller {
 
 	    	$module = $inteos_array[0]['ModNam'];
 
+	    	if ($module == '') {
+	    		$module = 'KREIRAN CB';
+	    	}
+
 	    	$location = NULL;
 
-	    	list($color, $size) = explode('-', $variant);
-	    	// dd($size);
+	    	// list($color, $size) = explode('-', $variant);
+	    	$brlinija = substr_count($variant,"-");
+			// echo $brlinija." ";
+
+				if ($brlinija == 2)
+				{
+					list($color, $size1, $size2) = explode('-', $variant);
+					$size = $size1."-".$size2;
+					// echo $color." ".$size;	
+				} else {
+					list($color, $size) = explode('-', $variant);
+					// echo $color." ".$size;
+				}
+				
 	    	// $size_to_search = str_replace("/","-",$size);
 	    	// dd($size_to_search);
 
@@ -133,6 +149,7 @@ class SfusiAddController extends Controller {
 		}
 
 		// Save in addlog table
+		
 		try {
 
 			$table = new addlog;
@@ -146,7 +163,7 @@ class SfusiAddController extends Controller {
 			$table->colordesc = $colordesc;
 			$table->size = $size;
 
-			$table->qty = $qty;
+			$table->qty = $qty; //0
 			$table->standard_qty = $standard_qty;
 
 			$table->module = $module;
@@ -157,8 +174,8 @@ class SfusiAddController extends Controller {
 			$msg = "Problem to save data to addlog table.";
 			return view('Add.error',compact('msg'));
 		}
-
-		return view('Add.checkqty', compact('cartonbox', 'po', 'po_status', 'style', 'color','colordesc', 'size', 'qty', 'standard_qty', 'location'));
+		
+		return view('Add.checkqty', compact('cartonbox', 'po', 'po_status', 'style', 'color','colordesc', 'size', 'qty', 'standard_qty', 'module', 'location'));
 	}
 
 	public function checkqty(Request $request) 
@@ -174,15 +191,27 @@ class SfusiAddController extends Controller {
 		$color = $input['color'];
 		$colordesc = $input['colordesc'];
 		$size = $input['size'];
-		$qty = (int)$input['qty'];
+		$qty = (int)$input['qty']; //0
 		$standard_qty = (int)$input['standard_qty'];
 		$po_status = $input['po_status'];
+		$module = $input['module'];
 
 		if ($po_status == NULL) {
 			$po_status = "Released";
 		} else {
 			$po_status = "Closed";
 		}
+
+		// Update Log
+		$log = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM addlogs WHERE cartonbox = '".$cartonbox."'"));
+
+		if (isset($log[0]->id)) {
+		
+				$table = addlog::findOrFail($log[0]->id);
+				$table->qty = $qty;
+				$table->save();
+		}
+
 
 		// Search for exist cb
 		$exist = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock WHERE po = '".$po."' AND size = '".$size."' ORDER BY created_at"));
@@ -228,30 +257,20 @@ class SfusiAddController extends Controller {
 					}
 
 					// Add in Log table
-					
 					$log = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM addlogs WHERE cartonbox = '".$exist_cartonbox."'"));
 
 					if (isset($log[0]->id)) {
-						// dd("Test");
-						// try {
+					
 							$table = addlog::findOrFail($log[0]->id);
-							
+
 							$table->cartonbox_old = $cartonbox;
 							// $table->po_status = $po_status;
 							$table->qty = $sumofqty;
 							$table->standard_qty = $standard_qty;
-
 							$table->save();
-						// }
-						// catch (\Illuminate\Database\QueryException $e) {
-						// 	$msg = "Problem to edit in log table";
-						// 	return view('Add.error',compact('msg'));
-						// }
 					}
 					
-
 					return view('Add.result', compact('info','msg','case','exist_cartonbox','exist_qty','cartonbox','qty','standard_qty','exist_location'));
-
 
 				} else {
 					$info .= " take out garments from OLD box and put in NEW box on same location. ";
@@ -264,12 +283,11 @@ class SfusiAddController extends Controller {
 					
 						$table->cartonbox = $cartonbox;
 						$table->cartonbox_old = $exist_cartonbox;
-						
 						$table->po_status = $po_status;
 						$table->qty = $sumofqty;
 						$table->standard_qty = $standard_qty;
-																				
 						$table->save();
+
 					}
 					catch (\Illuminate\Database\QueryException $e) {
 						$msg = "Problem to edit in sfusiStock table";
@@ -277,30 +295,20 @@ class SfusiAddController extends Controller {
 					}
 
 					// Add in Log table
-					
 					$log = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM addlogs WHERE cartonbox = '".$cartonbox."'"));
 
 					if (isset($log[0]->id)) {
 
-						try {
 							$table = addlog::findOrFail($log[0]->id);
-							
+							$table->cartonbox = $cartonbox;
 							$table->cartonbox_old = $exist_cartonbox;
 							// $table->po_status = $po_status;
 							$table->qty = $sumofqty;
 							$table->standard_qty = $standard_qty;
-
 							$table->save();
-						}
-						catch (\Illuminate\Database\QueryException $e) {
-							$msg = "Problem to edit in log table";
-							return view('Add.error',compact('msg'));
-						}
 					}
-					
 
 					return view('Add.result', compact('info','msg','case','exist_cartonbox','exist_qty','cartonbox','qty','standard_qty','exist_location'));
-						
 				}
 
 			} elseif ($sumofqty > $standard_qty) {
@@ -315,14 +323,11 @@ class SfusiAddController extends Controller {
 					//Edit existing box in sfusiStock
 					try {
 						$table = sfusiStock::findOrFail($exist_id);
-					
 						$table->cartonbox = $cartonbox;
 						$table->cartonbox_old = $exist_cartonbox;
-
 						$table->po_status = $po_status;
 						$table->qty = $new_qty;
 						$table->standard_qty = $standard_qty;
-														
 						$table->save();
 					}
 					catch (\Illuminate\Database\QueryException $e) {
@@ -331,27 +336,18 @@ class SfusiAddController extends Controller {
 					}
 
 					// Add in Log table
-					
 					$log = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM addlogs WHERE cartonbox = '".$cartonbox."'"));
 
 					if (isset($log[0]->id)) {
 
-						try {
 							$table = addlog::findOrFail($log[0]->id);
-							
+							$table->cartonbox = $cartonbox;
 							$table->cartonbox_old = $exist_cartonbox;
 							// $table->po_status = $po_status;
 							$table->qty = $new_qty;
 							$table->standard_qty = $standard_qty;
-
 							$table->save();
-						}
-						catch (\Illuminate\Database\QueryException $e) {
-							$msg = "Problem to edit in log table";
-							return view('Add.error',compact('msg'));
-						}
 					}
-					
 
 					return view('Add.result', compact('info','msg','case','exist_cartonbox','exist_qty','cartonbox','qty','standard_qty','exist_location'));
 
@@ -378,27 +374,18 @@ class SfusiAddController extends Controller {
 					}
 
 					// Add in Log table
-					
 					$log = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM addlogs WHERE cartonbox = '".$exist_cartonbox."'"));
 
 					if (isset($log[0]->id)) {
 
-						try {
 							$table = addlog::findOrFail($log[0]->id);
-							
+
 							$table->cartonbox_old = $cartonbox;
 							// $table->po_status = $po_status;
 							$table->qty = $new_qty;
 							$table->standard_qty = $standard_qty;
-
 							$table->save();
-						}
-						catch (\Illuminate\Database\QueryException $e) {
-							$msg = "Problem to edit in log table";
-							return view('Add.error',compact('msg'));
-						}
 					}
-					
 
 					return view('Add.result', compact('info','msg','case','exist_cartonbox','exist_qty','cartonbox','qty','standard_qty','exist_location'));
 					
@@ -414,7 +401,6 @@ class SfusiAddController extends Controller {
 				//Delete existing box in sfusiStock
 					try {
 						$table = sfusiStock::findOrFail($exist_id);
-					
 						$table->delete();
 					}
 					catch (\Illuminate\Database\QueryException $e) {
@@ -422,26 +408,21 @@ class SfusiAddController extends Controller {
 						return view('Add.error',compact('msg'));		
 					}
 
+					//$log = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM addlogs WHERE cartonbox = '".$exist_cartonbox."'"));
 					$log = DB::connection('sqlsrv')->select(DB::raw("SELECT id FROM addlogs WHERE cartonbox = '".$cartonbox."'"));
 
 					if (isset($log[0]->id)) {
 
-						try {
 							$table = addlog::findOrFail($log[0]->id);
+							//$table->delete();		
 							
 							$table->cartonbox_old = $exist_cartonbox;
 							// $table->po_status = $po_status;
-							$table->qty = 0;
+							$table->qty = $qty;
 							$table->standard_qty = $standard_qty;
-
 							$table->save();
-						}
-						catch (\Illuminate\Database\QueryException $e) {
-							$msg = "Problem to edit in log table";
-							return view('Add.error',compact('msg'));
-						}
+							
 					}
-
 					return view('Add.result', compact('info','msg','case','exist_cartonbox','exist_qty','cartonbox','qty','standard_qty','exist_location'));
 
 			}	
@@ -464,7 +445,7 @@ class SfusiAddController extends Controller {
 				$msg = "This is first box for this PO";
 			}
 
-			return view('Add.new_box',compact('info','msg','case','cartonbox','po','po_status','style','color','colordesc','size','qty','standard_qty'));
+			return view('Add.new_box',compact('info','msg','case','cartonbox','po','po_status','style','color','colordesc','size','qty','standard_qty','module'));
 		}
 
 	}
@@ -516,6 +497,35 @@ class SfusiAddController extends Controller {
 				$msg = "Problem to save cb in sfusistock table";
 				return view('Add.error',compact('msg'));
 			}
+
+			// Save in addlog table
+			/*
+			try {
+
+				$table = new addlog;
+
+				$table->cartonbox = $cartonbox;
+				$table->cartonbox_old = NULL;
+				$table->po = $po;
+				
+				$table->style = $style;
+				$table->color = $color;
+				$table->colordesc = $colordesc;
+				$table->size = $size;
+
+				$table->qty = $qty; //0
+				$table->standard_qty = $standard_qty;
+
+				$table->module = $module;
+
+				$table->save();
+			}
+				catch (\Illuminate\Database\QueryException $e) {
+				$msg = "Problem to save data to addlog table.";
+				return view('Add.error',compact('msg'));
+			}
+			*/
+		
 
 		return Redirect::to('/add');
 	}

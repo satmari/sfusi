@@ -27,4 +27,34 @@ class adlogTableControler extends Controller {
 		return redirect('addlogtable/');
 	}
 
+	public function deletelogtable()
+	{
+		//
+		
+		return view('Table.deletelog');		
+	}
+
+	public function deletelogtableconfirm(Request $request)
+	{
+		//
+		// Validate
+		$this->validate($request, ['from'=>'required', 'to'=>'required']);
+
+		$input = $request->all(); 
+		// var_dump($input);
+	
+		$from = $input['from'];
+		$to = $input['to'];
+
+		// dd($from);
+
+		$sql1 = DB::connection('sqlsrv')->select(DB::raw("SET NOCOUNT ON;
+					DELETE FROM addlogs
+					WHERE created_at > '".$from."' AND created_at < '".$to."';
+					SELECT TOP 1 id FROM addlogs; "));
+		
+		return redirect('addlogtable/');
+	}
+
+
 }
