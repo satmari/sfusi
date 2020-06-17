@@ -194,18 +194,36 @@ class SfusiTableController extends Controller {
 					LEFT OUTER JOIN dbo.CNF_SKU AS sku ON po.SKUKEY = sku.INTKEY
 					LEFT OUTER JOIN dbo.CNF_STYLE AS st ON sku.STYKEY = st.INTKEY
 									
-					WHERE			po.POnum = :po AND sku.Variant = :variant
+					WHERE			po.POnum = '".$po."' AND sku.Variant = '".$variant."'
 
 					GROUP BY		
 									cb.EDITDATE/*,
 									cb.BoxNum,
 									po.POnum,
 									sku.Variant*/
-					ORDER BY EDITDATE desc
-								"
-					), array(
-						'po' => $po, 'variant' => $variant
-				));
+					UNION ALL
+					
+					SELECT	TOP 1
+					cb.EDITDATE /*,
+					cb.BoxNum,
+					po.POnum,
+					sku.Variant*/
+					
+					FROM            [SBT-SQLDB01P\INTEOSKKA].[BdkCLZKKA].[dbo].CNF_CartonBox AS cb 
+					LEFT OUTER JOIN [SBT-SQLDB01P\\INTEOSKKA].[BdkCLZKKA].[dbo].CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
+					LEFT OUTER JOIN [SBT-SQLDB01P\\INTEOSKKA].[BdkCLZKKA].[dbo].CNF_SKU AS sku ON po.SKUKEY = sku.INTKEY
+					LEFT OUTER JOIN [SBT-SQLDB01P\\INTEOSKKA].[BdkCLZKKA].[dbo].CNF_STYLE AS st ON sku.STYKEY = st.INTKEY
+									
+					WHERE			po.POnum = '".$po."' AND sku.Variant = '".$variant."'
+
+					GROUP BY		
+									cb.EDITDATE/*,
+									cb.BoxNum,
+									po.POnum,
+									sku.Variant*/
+					"
+					));
+
 				// dd($inteos);
 
 				$inteos_array = object_to_array($inteos);

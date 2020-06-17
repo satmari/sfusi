@@ -37,48 +37,104 @@ class SfusiAddController extends Controller {
 		// Live database
 		try {
 			
-			// Inteos - box information
-			$inteos = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
-				cb.BoxNum,
-				cb.Produced,
-				cb.Module,
-				po.POnum,
-				po.BoxQuant,
-				po.POClosed,
-				st.StyCod,
-				sku.Variant,
-				sku.ClrDesc,
-				m.ModNam
-				
-				FROM            dbo.CNF_CartonBox AS cb 
-				LEFT OUTER JOIN dbo.CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
-				LEFT OUTER JOIN dbo.CNF_SKU AS sku ON po.SKUKEY = sku.INTKEY
-				LEFT OUTER JOIN dbo.CNF_STYLE AS st ON sku.STYKEY = st.INTKEY
-				LEFT OUTER JOIN dbo.CNF_BlueBox AS bb ON cb.BBcreated = bb.INTKEY
-				LEFT OUTER JOIN dbo.CNF_Modules AS m ON cb.Module= m.Module
-				
-				WHERE			cb.BoxNum = :somevariable
+			if (substr($inteoscbcode, 0, 2) == '70') {
 
-				GROUP BY		cb.BoxNum,
-								cb.Produced,
-								cb.Module,
-								po.POnum,
-								po.BoxQuant,
-								po.POClosed,
-								st.StyCod,
-								sku.Variant,
-								sku.ClrDesc,
-								m.ModNam"
-				), array(
-					'somevariable' => $inteoscbcode
-			));
+				// Inteos - box information
+				$inteos = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
+					cb.BoxNum,
+					cb.Produced,
+					cb.Module,
+					po.POnum,
+					po.BoxQuant,
+					po.POClosed,
+					st.StyCod,
+					sku.Variant,
+					sku.ClrDesc,
+					m.ModNam
+					
+					FROM            dbo.CNF_CartonBox AS cb 
+					LEFT OUTER JOIN dbo.CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
+					LEFT OUTER JOIN dbo.CNF_SKU AS sku ON po.SKUKEY = sku.INTKEY
+					LEFT OUTER JOIN dbo.CNF_STYLE AS st ON sku.STYKEY = st.INTKEY
+					LEFT OUTER JOIN dbo.CNF_BlueBox AS bb ON cb.BBcreated = bb.INTKEY
+					LEFT OUTER JOIN dbo.CNF_Modules AS m ON cb.Module= m.Module
+					
+					WHERE			cb.BoxNum = :somevariable
 
-			if ($inteos) {
-				//continue
-			} else {
-	        	$msg = 'Cannot find CB in Inteos, NE POSTOJI KARTONSKA KUTIJA U INTEOSU !';
+					GROUP BY		cb.BoxNum,
+									cb.Produced,
+									cb.Module,
+									po.POnum,
+									po.BoxQuant,
+									po.POClosed,
+									st.StyCod,
+									sku.Variant,
+									sku.ClrDesc,
+									m.ModNam"
+					), array(
+						'somevariable' => $inteoscbcode
+				));
+
+				if ($inteos) {
+					//continue
+				} else {
+		        	$msg = 'Cannot find CB in Gordon Inteos, NE POSTOJI KARTONSKA KUTIJA U Gordon INTEOSU !';
+		        	return view('Add.error', compact('msg'));
+		    	}
+
+	    	} elseif (substr($inteoscbcode, 0, 2) == '71') {
+
+	    		// Inteos - box information
+				$inteos = DB::connection('sqlsrv5')->select(DB::raw("SELECT 
+					cb.BoxNum,
+					cb.Produced,
+					cb.Module,
+					po.POnum,
+					po.BoxQuant,
+					po.POClosed,
+					st.StyCod,
+					sku.Variant,
+					sku.ClrDesc,
+					m.ModNam
+					
+					FROM            dbo.CNF_CartonBox AS cb 
+					LEFT OUTER JOIN dbo.CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
+					LEFT OUTER JOIN dbo.CNF_SKU AS sku ON po.SKUKEY = sku.INTKEY
+					LEFT OUTER JOIN dbo.CNF_STYLE AS st ON sku.STYKEY = st.INTKEY
+					LEFT OUTER JOIN dbo.CNF_BlueBox AS bb ON cb.BBcreated = bb.INTKEY
+					LEFT OUTER JOIN dbo.CNF_Modules AS m ON cb.Module= m.Module
+					
+					WHERE			cb.BoxNum = :somevariable
+
+					GROUP BY		cb.BoxNum,
+									cb.Produced,
+									cb.Module,
+									po.POnum,
+									po.BoxQuant,
+									po.POClosed,
+									st.StyCod,
+									sku.Variant,
+									sku.ClrDesc,
+									m.ModNam"
+					), array(
+						'somevariable' => $inteoscbcode
+				));
+
+				if ($inteos) {
+					//continue
+				} else {
+		        	$msg = 'Cannot find CB in Kikinda Inteos, NE POSTOJI KARTONSKA KUTIJA U Kikinda INTEOSU !';
+		        	return view('Add.error', compact('msg'));
+		    	}
+
+	    	} else {
+			
+				$msg = 'Cannot find CB in any Inteos, NE POSTOJI KARTONSKA KUTIJA U INTEOSU!';
 	        	return view('Add.error', compact('msg'));
-	    	}
+	
+			}
+
+
 
 			function object_to_array($data)
 			{
