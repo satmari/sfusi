@@ -20,6 +20,7 @@
 				{!!Form::hidden('size', $size) !!}
 				{!!Form::hidden('standard_qty', $standard_qty) !!}
 				{!!Form::hidden('module', $module) !!}
+				{!!Form::hidden('tpp', $tpp) !!}
 				
 				<div class="panel-body">
 					<span>Quantity: <span style="color:red">*</span></span>

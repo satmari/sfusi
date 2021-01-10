@@ -58,7 +58,7 @@
 					   		<td>
 							@foreach($array as $key => $value)
 								@if($key == 'po')
-						    		<b>{{ substr($value, 9, 5) }}</b>
+						    		<b>{{ $value }}</b>
 						    	@endif
 						    @endforeach
 					   		</td>

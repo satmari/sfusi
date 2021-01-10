@@ -37,7 +37,7 @@ class SfusiAddController extends Controller {
 		// Live database
 		try {
 			
-			if (substr($inteoscbcode, 0, 2) == '70') {
+			if ((substr($inteoscbcode, 0, 2) == '70') OR (substr($inteoscbcode, 0, 2) == '84')) {
 
 				// Inteos - box information
 				$inteos = DB::connection('sqlsrv2')->select(DB::raw("SELECT 
@@ -50,7 +50,8 @@ class SfusiAddController extends Controller {
 					st.StyCod,
 					sku.Variant,
 					sku.ClrDesc,
-					m.ModNam
+					m.ModNam,
+					po.TPP
 					
 					FROM            dbo.CNF_CartonBox AS cb 
 					LEFT OUTER JOIN dbo.CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
@@ -70,7 +71,8 @@ class SfusiAddController extends Controller {
 									st.StyCod,
 									sku.Variant,
 									sku.ClrDesc,
-									m.ModNam"
+									m.ModNam,
+									po.TPP"
 					), array(
 						'somevariable' => $inteoscbcode
 				));
@@ -82,7 +84,7 @@ class SfusiAddController extends Controller {
 		        	return view('Add.error', compact('msg'));
 		    	}
 
-	    	} elseif (substr($inteoscbcode, 0, 2) == '71') {
+	    	} elseif ((substr($inteoscbcode, 0, 2) == '71') OR (substr($inteoscbcode, 0, 2) == '85'))  {
 
 	    		// Inteos - box information
 				$inteos = DB::connection('sqlsrv5')->select(DB::raw("SELECT 
@@ -95,7 +97,8 @@ class SfusiAddController extends Controller {
 					st.StyCod,
 					sku.Variant,
 					sku.ClrDesc,
-					m.ModNam
+					m.ModNam,
+					po.TPP
 					
 					FROM            dbo.CNF_CartonBox AS cb 
 					LEFT OUTER JOIN dbo.CNF_PO AS po ON cb.IntKeyPO = po.INTKEY 
@@ -115,7 +118,8 @@ class SfusiAddController extends Controller {
 									st.StyCod,
 									sku.Variant,
 									sku.ClrDesc,
-									m.ModNam"
+									m.ModNam,
+									po.TPP"
 					), array(
 						'somevariable' => $inteoscbcode
 				));
@@ -153,7 +157,18 @@ class SfusiAddController extends Controller {
 	    	$inteos_array = object_to_array($inteos);
 
 	    	$cartonbox = $inteos_array[0]['BoxNum'];
+
 	    	$po = $inteos_array[0]['POnum'];
+			// $brcrtica = substr_count($inteos_array[0]['POnum'],"-");
+			// // echo $brcrtica." ";
+			// 	if ($brcrtica == 1)
+			// {
+			// 	list($one, $two) = explode('-', $inteos_array[0]['POnum']);
+			// 	$po = $one;
+			// } else {
+			// 	$po = substr($inteos_array[0]['POnum'],-9,6);
+			// }
+
 	    	$po_status = $inteos_array[0]['POClosed'];
 	    	
 	    	$style = $inteos_array[0]['StyCod'];
@@ -162,8 +177,10 @@ class SfusiAddController extends Controller {
 
 	    	$qty = $inteos_array[0]['Produced'];
 	    	$standard_qty = $inteos_array[0]['BoxQuant'];
+	    	// dd($standard_qty);
 
 	    	$module = $inteos_array[0]['ModNam'];
+	    	$tpp = $inteos_array[0]['TPP'];
 
 	    	if ($module == '') {
 	    		$module = 'KREIRAN CB';
@@ -175,15 +192,15 @@ class SfusiAddController extends Controller {
 	    	$brlinija = substr_count($variant,"-");
 			// echo $brlinija." ";
 
-				if ($brlinija == 2)
-				{
-					list($color, $size1, $size2) = explode('-', $variant);
-					$size = $size1."-".$size2;
-					// echo $color." ".$size;	
-				} else {
-					list($color, $size) = explode('-', $variant);
-					// echo $color." ".$size;
-				}
+			if ($brlinija == 2)
+			{
+				list($color, $size1, $size2) = explode('-', $variant);
+				$size = $size1."-".$size2;
+				// echo $color." ".$size;	
+			} else {
+				list($color, $size) = explode('-', $variant);
+				// echo $color." ".$size;
+			}
 				
 	    	// $size_to_search = str_replace("/","-",$size);
 	    	// dd($size_to_search);
@@ -205,9 +222,7 @@ class SfusiAddController extends Controller {
 		}
 
 		// Save in addlog table
-		
 		try {
-
 			$table = new addlog;
 
 			$table->cartonbox = $cartonbox;
@@ -223,6 +238,7 @@ class SfusiAddController extends Controller {
 			$table->standard_qty = $standard_qty;
 
 			$table->module = $module;
+			// $table->flag = $tpp;
 
 			$table->save();
 		}
@@ -231,7 +247,7 @@ class SfusiAddController extends Controller {
 			return view('Add.error',compact('msg'));
 		}
 		
-		return view('Add.checkqty', compact('cartonbox', 'po', 'po_status', 'style', 'color','colordesc', 'size', 'qty', 'standard_qty', 'module', 'location'));
+		return view('Add.checkqty', compact('cartonbox', 'po', 'po_status', 'style', 'color','colordesc', 'size', 'qty', 'standard_qty', 'module', 'tpp','location'));
 	}
 
 	public function checkqty(Request $request) 
@@ -251,6 +267,7 @@ class SfusiAddController extends Controller {
 		$standard_qty = (int)$input['standard_qty'];
 		$po_status = $input['po_status'];
 		$module = $input['module'];
+		$tpp = $input['tpp'];
 
 		if ($po_status == NULL) {
 			$po_status = "Released";
@@ -270,8 +287,19 @@ class SfusiAddController extends Controller {
 
 
 		// Search for exist cb
-		$exist = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock WHERE po = '".$po."' AND size = '".$size."' ORDER BY created_at"));
+		// $exist = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock WHERE po = '".$po."' AND size = '".$size."' ORDER BY created_at"));
+		$exist = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM sfusiStock WHERE po = '".$po."' ORDER BY created_at"));
 		// dd($exist);
+
+		// Take new Standard Qty
+		$standard_qty_new = DB::connection('sqlsrv4')->select(DB::raw("SELECT * FROM box_settings WHERE style = '".$style."' AND color = '".$color."' AND size = '".$size."'  "));
+		// dd($standard_qty_new);
+
+		if (isset($standard_qty_new[0]->pcs_per_box)) {
+			$standard_qty = (int)$standard_qty_new[0]->pcs_per_box;
+			// dd($standard_qty);
+		} 		
+		// dd($standard_qty);
 
 		if ($exist){
 			// dd("exist");
@@ -283,13 +311,19 @@ class SfusiAddController extends Controller {
 
 			$sumofqty = $exist_qty + $qty;
 			//$standard_qty_num = $standard_qty;
-			$noofboxes = ceil($sumofqty/$standard_qty);
+			// dd($standard_qty);
+			if ($standard_qty == 0) {
+				dd("Standard value for Pieces in Boxes is missing or is 0, call Zlatko");
+				$noofboxes = 0;
+			} else {
+				$noofboxes = ceil($sumofqty/$standard_qty);
+			}
 
 			$info = "";
 			$case = NULL;
 
 			if ($sumofqty < $standard_qty) {
-				$info .= " Box with this SKU already exist, but SUM of qty is less than standard box qty, ";
+				$info .= " Box with this PO already exist, but SUM of qty is less than standard box qty, ";
 
 				if ($exist_qty >= $qty) {
 					$info .= " take out garments from NEW and put inside OLD box on same location. ";
@@ -304,6 +338,7 @@ class SfusiAddController extends Controller {
 						$table->po_status = $po_status;
 						$table->qty = $sumofqty;
 						$table->standard_qty = $standard_qty;
+						$table->flag = $tpp;
 																				
 						$table->save();
 					}
@@ -342,6 +377,7 @@ class SfusiAddController extends Controller {
 						$table->po_status = $po_status;
 						$table->qty = $sumofqty;
 						$table->standard_qty = $standard_qty;
+						$table->flag = $tpp;
 						$table->save();
 
 					}
@@ -368,7 +404,7 @@ class SfusiAddController extends Controller {
 				}
 
 			} elseif ($sumofqty > $standard_qty) {
-				$info .= " Box with this SKU already exist, SUM of qty is higher than standard box qty, ";	
+				$info .= " Box with this PO already exist, SUM of qty is higher than standard box qty, ";	
 
 				if ($exist_qty >= $qty) {
 					$info .= " take out garments from NEW box and fill up OLD box, after that NEW box put on same location. ";
@@ -384,6 +420,7 @@ class SfusiAddController extends Controller {
 						$table->po_status = $po_status;
 						$table->qty = $new_qty;
 						$table->standard_qty = $standard_qty;
+						$table->flag = $tpp;
 						$table->save();
 					}
 					catch (\Illuminate\Database\QueryException $e) {
@@ -421,6 +458,7 @@ class SfusiAddController extends Controller {
 						$table->po_status = $po_status;
 						$table->qty = $new_qty;
 						$table->standard_qty = $standard_qty;
+						$table->flag = $tpp;
 																				
 						$table->save();
 					}
@@ -479,7 +517,7 @@ class SfusiAddController extends Controller {
 							$table->save();
 							
 					}
-					return view('Add.result', compact('info','msg','case','exist_cartonbox','exist_qty','cartonbox','qty','standard_qty','exist_location'));
+					return view('Add.result', compact('info','msg','case','exist_cartonbox','exist_qty','cartonbox','qty','standard_qty','exist_location','tpp'));
 
 			}	
 		} else {
@@ -501,7 +539,7 @@ class SfusiAddController extends Controller {
 				$msg = "This is first box for this PO";
 			}
 
-			return view('Add.new_box',compact('info','msg','case','cartonbox','po','po_status','style','color','colordesc','size','qty','standard_qty','module'));
+			return view('Add.new_box',compact('info','msg','case','cartonbox','po','po_status','style','color','colordesc','size','qty','standard_qty','module','tpp'));
 		}
 
 	}
@@ -515,6 +553,19 @@ class SfusiAddController extends Controller {
 
 		$cartonbox = $input['cartonbox'];
 		$po = $input['po'];
+
+		// // $po = $inteos_array[0]['POnum'];
+		// $brcrtica = substr_count($input['po'],"-");
+		// // echo $brcrtica." ";
+		// 	if ($brcrtica == 1)
+		// {
+		// 	list($one, $two) = explode('-', $input['po']);
+		// 	$po = $one;
+		// } else {
+		// 	$po = substr($input['po'],-9,6);
+		// }
+
+
 		$po_status = $input['po_status'];
 		$style = $input['style'];
 		$color = $input['color'];
@@ -522,6 +573,7 @@ class SfusiAddController extends Controller {
 		$size = $input['size'];
 		$qty = (int)$input['qty'];
 		$standard_qty = (int)$input['standard_qty'];
+		$tpp = (int)$input['tpp'];
 		
 		$location_temp = strtoupper($input['location']);
 		$location = str_replace("'","-",$location_temp);
@@ -543,6 +595,7 @@ class SfusiAddController extends Controller {
 				$table->standard_qty = $standard_qty;
 
 				$table->location = $location; 
+				$table->flag = $tpp;
 
 				$table->status;
 				$table->coloumn;

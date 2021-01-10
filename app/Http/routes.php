@@ -42,6 +42,7 @@ Route::get('search', 'SfusiSearchController@index');
 
 // Refresh 
 Route::get('refresh', 'SfusiTableController@refresh');
+Route::get('refresh_tpp', 'SfusiTableController@refresh_tpp');
 
 // Export 
 Route::get('export', 'ExportController@index');

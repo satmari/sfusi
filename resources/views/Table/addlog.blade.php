@@ -61,7 +61,7 @@
 				        	{{-- <td>{{ $d->id }}</td> --}}
 				        	<td>{{ $d->cartonbox }}</td>
 				        	<td>{{ $d->cartonbox_old }}</td>
-				        	<td style="background-color: cornsilk;"><b>{{ substr($d->po, 8, 6) }}</b></td>
+				        	<td style="background-color: cornsilk;"><b>{{ $d->po }}</b></td>
 				        	<td>{{ $d->style }}</td>
 				        	<td>{{ $d->size }}</td>
 				        	<td>{{ $d->color }}</td>

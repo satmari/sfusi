@@ -17,7 +17,7 @@ class ShipTableController extends Controller {
 	public function index()
 	{
 		//
-		$data = DB::connection('sqlsrv')->select(DB::raw("SELECT * FROM shipStock"));
+		$data = DB::connection('sqlsrv')->select(DB::raw("SELECT *, (CASE WHEN po like '%-%' THEN substring(po, 1,6) ELSE substring (po, 4,6) END) as po FROM shipStock"));
 		return view('Table.index_s',compact('data'));
 	}	
 

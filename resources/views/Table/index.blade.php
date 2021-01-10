@@ -9,6 +9,7 @@
 				
 
 				<a href="{{ url('/add') }}" class="btn btn-info btn-s">Add new SFUSI box</a>
+				<a href="{{ url('/refresh_tpp') }}" class="btn btn-default btn-s">Refresh TPP and Segment</a>
 				<br>
                 <div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
@@ -55,8 +56,8 @@
 				           <th>Last used</th>
 				           <th data-sortable="true">In days</th>
 				           <th>Status</th>
-				           <th>Flash</th>
-				           <th>Flag</th>
+				           <th>Segment</th>
+				           <th>TPP</th>
 				           {{-- <th>Created at</th> --}}
 				           {{-- <th>Edited at</th> --}}
 
@@ -71,7 +72,7 @@
 				        <tr>
 				        	{{-- <td>{{ $d->id }}</td> --}}
 				        	<td>{{ $d->cartonbox }}</td>
-				        	<td style="background-color: cornsilk;"><b>{{ substr($d->po, 8, 6) }}</b></td>
+				        	<td style="background-color: cornsilk;"><b>{{ $d->po }}</b></td>
 				        	{{-- <td>{{ $d->po_status }}</td> --}}
 				        	<td>{{ $d->size }}</td>
 				        	<td>{{ $d->style }}</td>

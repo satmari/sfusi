@@ -30,6 +30,7 @@
 				{!!Form::hidden('size', $size) !!}
 				{!!Form::hidden('qty', $qty) !!}
 				{!!Form::hidden('standard_qty', $standard_qty) !!}
+				{!!Form::hidden('tpp', $tpp) !!}
 				
 				
 				<div class="panel-body">
