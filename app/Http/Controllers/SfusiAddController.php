@@ -221,6 +221,11 @@ class SfusiAddController extends Controller {
 			return view('Add.error',compact('msg'));
 		}
 
+		$style_sap = str_pad($style, 9);
+		$color_sap = str_pad($color, 4);
+		$size_sap = str_pad($size, 5);
+		$sku = $style_sap.$color_sap.$size_sap;
+
 		// Save in addlog table
 		try {
 			$table = new addlog;
@@ -233,6 +238,8 @@ class SfusiAddController extends Controller {
 			$table->color = $color;
 			$table->colordesc = $colordesc;
 			$table->size = $size;
+
+			$table->sku = $sku;
 
 			$table->qty = $qty; //0
 			$table->standard_qty = $standard_qty;
@@ -578,6 +585,11 @@ class SfusiAddController extends Controller {
 		$location_temp = strtoupper($input['location']);
 		$location = str_replace("'","-",$location_temp);
 
+		$style_sap = str_pad($style, 9);
+		$color_sap = str_pad($color, 4);
+		$size_sap = str_pad($size, 5);
+		$sku = $style_sap.$color_sap.$size_sap;
+
 		// Add new box to sfusiStock
 			try {
 				$table = new sfusiStock;
@@ -591,6 +603,8 @@ class SfusiAddController extends Controller {
 				$table->colordesc = $colordesc;
 				$table->size = $size;
 
+				$table->sku = $sku;
+				
 				$table->qty = $qty;
 				$table->standard_qty = $standard_qty;
 

@@ -16,6 +16,8 @@
                 </div>
 
                 <table class="table table-striped table-bordered" id="sort" 
+                data-show-export="true"
+                data-export-types="['excel']"
                 >
                 <!--
                 data-show-export="true"
@@ -45,9 +47,7 @@
 				           <th>Cartonbox</th>
 				           <th style="background-color: cornsilk;" data-sortable="true"><b>Po</b></th>
 				           {{-- <th>Po status</th> --}}
-				           <th data-sortable="true">Size</th>
-				           <th>Style</th>
-				           <th>Color</th>
+				           <th data-sortable="true">SKU</th>
 				           <th>ColorDesc</th>
 				           <th style="background-color: aliceblue;"><b>Qty</b></th>
 				           <th style="background-color: beige;"><b>Location</b></th>
@@ -74,9 +74,7 @@
 				        	<td>{{ $d->cartonbox }}</td>
 				        	<td style="background-color: cornsilk;"><b>{{ $d->po }}</b></td>
 				        	{{-- <td>{{ $d->po_status }}</td> --}}
-				        	<td>{{ $d->size }}</td>
-				        	<td>{{ $d->style }}</td>
-				        	<td>{{ $d->color }}</td>
+				        	<td><pre>{{ trim($d->sku) }}</pre></td>
 				        	<td>{{ $d->colordesc }}</td>
 				        	<td style="background-color: aliceblue;"><b>{{ $d->qty }}</b></td>
 				        	<td style="background-color: beige;"><b>{{ $d->location }}</b></td>

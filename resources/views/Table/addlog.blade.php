@@ -11,9 +11,9 @@
 				<div class="input-group"> <span class="input-group-addon">Filter</span>
                     <input id="filter" type="text" class="form-control" placeholder="Type here...">
                 </div>
-                <table class="table table-striped table-bordered" id="sort" 
+                <table style="table-layout: fixed !important" class="table table-bordered" id="sort" 
                 data-show-export="true"
-                data-export-types="['excel']"
+                data-export-types="['excel','csv','txt']"
                 >
                 <!--
                 
@@ -42,9 +42,8 @@
 				           <th>Cartonbox</th>
 				           <th>Cartonbox used</th>
 				           <th style="background-color: cornsilk;" data-sortable="true"><b>Po</b></th>
-				           <th>Style</th>
-				           <th data-sortable="true">Size</th>
-				           <th>Color</th>
+				           <th>SKU</th>
+				           <th>SKU</th>
 				           <th>ColorDesc</th>
 				           <th style="background-color: aliceblue;"><b>Qty</b></th>
 				           <th>Standard Qty</th>
@@ -62,9 +61,8 @@
 				        	<td>{{ $d->cartonbox }}</td>
 				        	<td>{{ $d->cartonbox_old }}</td>
 				        	<td style="background-color: cornsilk;"><b>{{ $d->po }}</b></td>
-				        	<td>{{ $d->style }}</td>
-				        	<td>{{ $d->size }}</td>
-				        	<td>{{ $d->color }}</td>
+				        	<td style="white-space:nowrap"><pre>{{ trim($d->sku) }}</pre></td>
+				        	<td tyle="white-space:nowrap; width:10000 px"><pre>{{ $d->sku }}</pre></td>
 				        	<td>{{ $d->colordesc }}</td>
 				        	<td style="background-color: aliceblue;"><b>{{ $d->qty }}</b></td>
 				        	<td>{{ $d->standard_qty }}</td>
@@ -75,6 +73,7 @@
 				    
 				    @endforeach
 				    </tbody>
+
 
 				</table>
 			</div>

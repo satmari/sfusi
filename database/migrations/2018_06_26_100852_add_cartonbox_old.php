@@ -16,21 +16,21 @@ class AddCartonboxOld extends Migration {
 		Schema::table('sfusiStock', function($table)
 		{
 			
-    		$table->string('cartonbox_old')->nullable();
+    		$table->string('sku')->nullable();
     		
 		});
 
 		Schema::table('shipStock', function($table)
 		{
 			
-    		$table->string('cartonbox_old')->nullable();
+    		$table->string('sku')->nullable();
     		
 		});
 		
 		Schema::table('addlogs', function($table)
 		{
 			
-    		$table->string('cartonbox_old')->nullable();
+    		$table->string('sku')->nullable();
     		
 		});
 	}

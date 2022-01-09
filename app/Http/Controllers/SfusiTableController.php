@@ -100,6 +100,11 @@ class SfusiTableController extends Controller {
 		$color = $sfusi_table[0]->color;
 		$po = $sfusi_table[0]->po;
 		// var_dump($style);
+		$style_sap = str_pad($style, 9);
+		$color_sap = str_pad($color, 4);
+		$size_sap = str_pad($size, 5);
+
+		$sku = $style_sap.$color_sap.$size_sap;
 
 		$ship_table = DB::connection('sqlsrv')->select(DB::raw("SELECT cartonbox FROM shipStock WHERE po = '".$po."' AND size = '".$size."'"));
 		// dd($ship_table);
@@ -119,6 +124,8 @@ class SfusiTableController extends Controller {
 				$table->color = $sfusi_table[0]->color;
 				$table->colordesc = $sfusi_table[0]->colordesc;
 				$table->size = $sfusi_table[0]->size;
+
+				$table->sku = $sku;
 
 				$table->qty = $sfusi_table[0]->qty;
 				$table->standard_qty = $sfusi_table[0]->standard_qty;
@@ -358,7 +365,6 @@ class SfusiTableController extends Controller {
 		    	} else {
 		    		$segment = NULL;
 		    	}
-		    	
 		    	// dd($segment);
 
 		    	try {
